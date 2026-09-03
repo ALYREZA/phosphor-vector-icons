@@ -92,3 +92,9 @@ Run tests:
 pnpm test
 ```
 
+## Contributor examples
+
+If you want to quickly verify the renderer in a real app (instead of unit tests), see:
+- `packages/react/example` (React web usage template)
+- `packages/react-native/example` (Expo / React Native usage template + `expo-font` setup)
+

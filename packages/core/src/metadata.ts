@@ -41,4 +41,3 @@ export const iconMetadata = Object.fromEntries(
     },
   ]),
 ) as Record<IconName, IconMetadata>;
-

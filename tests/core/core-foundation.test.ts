@@ -39,11 +39,9 @@ describe("@phosphor-icons/core-foundation - generator", () => {
   it("generateCodeArtifacts writes expected files", async () => {
     const tmpRoot = await fs.mkdtemp(path.join(os.tmpdir(), "phosphor-core-foundation-"));
     const srcDir = path.join(tmpRoot, "src");
-    const glyphMapJsonPath = path.join(tmpRoot, "glyphMap.json");
 
     await generateCodeArtifacts(glyphMap as Record<string, number>, {
       outSrcDir: srcDir,
-      outGlyphMapJsonPath: glyphMapJsonPath,
     });
 
     const glyphMapTs = path.join(srcDir, "glyphMap.ts");
