@@ -22,3 +22,5 @@ pnpm dev
 Vite prints a local URL (usually `http://localhost:5173`).
 
 This example renders every weight: `thin`, `light`, `regular`, `bold`, `fill`, `duotone`.
+
+Consumers can call `configure({ weights: ["regular"] })` to use a single family, or import from `phosphor-vector-icons/regular`.

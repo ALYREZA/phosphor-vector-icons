@@ -42,6 +42,41 @@ Supported weights:
 - `fill`
 - `duotone`
 
+By default every weight is available. Call `configure` once at app startup if you only need some of them (for example Regular). Unconfigured `weight` values fall back to Regular when it is enabled, otherwise to the first configured weight.
+
+```tsx
+import { Icon, configure } from "phosphor-vector-icons";
+
+configure({ weights: ["regular"] });
+
+export function Example() {
+  return <Icon name="user" size={24} color="black" />;
+}
+```
+
+```tsx
+configure({ weights: ["regular", "fill"] });
+```
+
+On the web this only injects `@font-face` rules for the configured TTFs. In Expo, only `require()` those same files:
+
+```tsx
+import { configure, FONT_FAMILY } from "phosphor-vector-icons";
+import * as Font from "expo-font";
+
+configure({ weights: ["regular"] });
+
+Font.useFonts({
+  [FONT_FAMILY.regular]: require("phosphor-vector-icons/fonts/Phosphor-Regular.ttf")
+});
+```
+
+To omit unused TTF files from the compiled JS bundle, import a weight entry instead of the root package:
+
+```tsx
+import { Icon } from "phosphor-vector-icons/regular";
+```
+
 ## Backend-driven payloads
 
 Your backend can send:
@@ -117,4 +152,3 @@ pnpm --filter phosphor-icons-expo-example start
 
 - `packages/react/example` — Vite app
 - `packages/react-native/example` — Expo app (`expo-font` loads the TTFs)
-

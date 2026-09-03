@@ -33,13 +33,54 @@
       "browser": "./react.js",
       "default": "./react.js"
     },
+    "./thin": {
+      "react-native": "./thin.native.js",
+      "types": "./thin.d.ts",
+      "default": "./thin.js"
+    },
+    "./light": {
+      "react-native": "./light.native.js",
+      "types": "./light.d.ts",
+      "default": "./light.js"
+    },
+    "./regular": {
+      "react-native": "./regular.native.js",
+      "types": "./regular.d.ts",
+      "default": "./regular.js"
+    },
+    "./bold": {
+      "react-native": "./bold.native.js",
+      "types": "./bold.d.ts",
+      "default": "./bold.js"
+    },
+    "./fill": {
+      "react-native": "./fill.native.js",
+      "types": "./fill.d.ts",
+      "default": "./fill.js"
+    },
+    "./duotone": {
+      "react-native": "./duotone.native.js",
+      "types": "./duotone.d.ts",
+      "default": "./duotone.js"
+    },
     "./fonts/*": "./fonts/*"
   },
   "files": [
     "react.js",
     "react-native.js",
-    "react.d.ts",
-    "react-native.d.ts",
+    "thin.js",
+    "thin.native.js",
+    "light.js",
+    "light.native.js",
+    "regular.js",
+    "regular.native.js",
+    "bold.js",
+    "bold.native.js",
+    "fill.js",
+    "fill.native.js",
+    "duotone.js",
+    "duotone.native.js",
+    "*.d.ts",
     "fonts",
     "glyphMap.json",
     "IconName.ts",
@@ -49,7 +90,7 @@
   ],
   "scripts": {
     "prebuild": "node ./copy-core-artifacts.mjs",
-    "build": "tsup --config tsup.config.ts",
+    "build": "tsup --config tsup.config.ts && node ./fix-dts.mjs",
     "prepack": "pnpm build"
   },
   "peerDependencies": {

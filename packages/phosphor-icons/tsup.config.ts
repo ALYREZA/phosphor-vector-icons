@@ -1,9 +1,19 @@
 import { defineConfig } from "tsup";
 
+const WEIGHTS = ["thin", "light", "regular", "bold", "fill", "duotone"] as const;
+
+const weightEntries = Object.fromEntries(
+  WEIGHTS.flatMap((weight) => [
+    [weight, `./${weight}.tsx`],
+    [`${weight}.native`, `./${weight}.native.tsx`]
+  ])
+);
+
 export default defineConfig({
   entry: {
     react: "./react.tsx",
-    "react-native": "./react-native.tsx"
+    "react-native": "./react-native.tsx",
+    ...weightEntries
   },
   format: ["esm"],
   tsconfig: "./tsconfig.build.json",
@@ -17,8 +27,11 @@ export default defineConfig({
   external: ["react", "react-native"],
   noExternal: [
     "phosphor-core",
+    "phosphor-core/font-urls",
     "phosphor-icons-react",
-    "phosphor-icons-react-native"
+    "phosphor-icons-react/createIcon",
+    "phosphor-icons-react-native",
+    "phosphor-icons-react-native/createIcon"
   ],
   treeshake: true,
   esbuildOptions(options) {
@@ -26,4 +39,3 @@ export default defineConfig({
     options.sourcemap = false;
   }
 });
-

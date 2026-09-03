@@ -1,7 +1,26 @@
 import { jsx } from 'react/jsx-runtime';
 import * as React from 'react';
 
-// ../react/dist/Icon.js
+// ../phosphor-core/dist/src/fontFiles.js
+var FONT_FILE = {
+  thin: "Phosphor-Thin.ttf",
+  light: "Phosphor-Light.ttf",
+  regular: "Phosphor-Regular.ttf",
+  bold: "Phosphor-Bold.ttf",
+  fill: "Phosphor-Fill.ttf",
+  duotone: "Phosphor-Duotone.ttf"
+};
+
+// ../phosphor-core/dist/src/fontUrls.js
+var fontBase = import.meta.url.includes("/dist/") ? "../fonts/" : "./fonts/";
+var FONT_URL = {
+  thin: new URL(`${fontBase}${FONT_FILE.thin}`, import.meta.url).href,
+  light: new URL(`${fontBase}${FONT_FILE.light}`, import.meta.url).href,
+  regular: new URL(`${fontBase}${FONT_FILE.regular}`, import.meta.url).href,
+  bold: new URL(`${fontBase}${FONT_FILE.bold}`, import.meta.url).href,
+  fill: new URL(`${fontBase}${FONT_FILE.fill}`, import.meta.url).href,
+  duotone: new URL(`${fontBase}${FONT_FILE.duotone}`, import.meta.url).href
+};
 
 // ../phosphor-core/dist/glyphMap.json
 var glyphMap_default = {
@@ -1519,8 +1538,7 @@ var glyphMap_default = {
   "youtube-logo": 61159
 };
 
-// ../phosphor-core/dist/src/index.js
-var glyphMap = glyphMap_default;
+// ../phosphor-core/dist/src/fonts.js
 var FONT_FAMILY = {
   thin: "Phosphor-Thin",
   light: "Phosphor-Light",
@@ -1529,53 +1547,91 @@ var FONT_FAMILY = {
   fill: "Phosphor-Fill",
   duotone: "Phosphor-Duotone"
 };
-var fontBase = import.meta.url.includes("/dist/") ? "../fonts/" : "./fonts/";
-var FONT_URL = {
-  thin: new URL(`${fontBase}Phosphor-Thin.ttf`, import.meta.url).href,
-  light: new URL(`${fontBase}Phosphor-Light.ttf`, import.meta.url).href,
-  regular: new URL(`${fontBase}Phosphor-Regular.ttf`, import.meta.url).href,
-  bold: new URL(`${fontBase}Phosphor-Bold.ttf`, import.meta.url).href,
-  fill: new URL(`${fontBase}Phosphor-Fill.ttf`, import.meta.url).href,
-  duotone: new URL(`${fontBase}Phosphor-Duotone.ttf`, import.meta.url).href
-};
+var WEIGHTS = Object.keys(FONT_FAMILY);
 
-// ../react/dist/Icon.js
-var defaultWeight = "regular";
-var didInjectFontFaces = false;
-function ensureFontFacesInjected() {
-  if (didInjectFontFaces)
-    return;
-  if (typeof document === "undefined")
-    return;
-  const styleId = "phosphor-icons-font-face";
-  if (document.getElementById(styleId)) {
-    didInjectFontFaces = true;
+// ../phosphor-core/dist/src/config.js
+var configuredWeights = WEIGHTS;
+function configure(config) {
+  if (!config.weights || config.weights.length === 0) {
+    configuredWeights = WEIGHTS;
     return;
   }
-  const styleEl = document.createElement("style");
-  styleEl.id = styleId;
-  styleEl.textContent = Object.keys(FONT_FAMILY).map((weight) => `@font-face { font-family: "${FONT_FAMILY[weight]}"; src: url("${FONT_URL[weight]}") format("truetype"); font-style: normal; font-weight: 400; }`).join("\n");
-  document.head.appendChild(styleEl);
-  didInjectFontFaces = true;
+  const unique = [];
+  for (const weight of config.weights) {
+    if (!WEIGHTS.includes(weight))
+      continue;
+    if (unique.includes(weight))
+      continue;
+    unique.push(weight);
+  }
+  configuredWeights = unique.length > 0 ? unique : WEIGHTS;
 }
+function getConfiguredWeights() {
+  return configuredWeights;
+}
+function resolveWeight(requested, available) {
+  const configured = getConfiguredWeights();
+  const usable = available.filter((weight) => configured.includes(weight));
+  const pool = usable.length > 0 ? usable : available;
+  if (pool.includes(requested))
+    return requested;
+  if (pool.includes("regular"))
+    return "regular";
+  return pool[0];
+}
+
+// ../phosphor-core/dist/src/index.js
+var glyphMap = glyphMap_default;
+
+// ../react/dist/createIcon.js
 function getCodepoint(name) {
   return glyphMap[name];
 }
-function Icon({ name, size = 16, color = "currentColor", weight = defaultWeight }) {
-  const codepoint = getCodepoint(name);
-  const glyph = typeof codepoint === "number" ? String.fromCodePoint(codepoint) : null;
-  React.useEffect(() => {
-    ensureFontFacesInjected();
-  }, []);
-  if (!glyph)
-    return null;
-  return jsx("span", { style: {
-    fontFamily: FONT_FAMILY[weight],
-    fontSize: size,
-    color,
-    lineHeight: 1,
-    display: "inline-block"
-  }, "aria-hidden": true, children: glyph });
+function fontFaceCss(family, url) {
+  return `@font-face { font-family: "${family}"; src: url("${url}") format("truetype"); font-style: normal; font-weight: 400; }`;
+}
+function createIcon(options) {
+  const available = Object.keys(options.fontUrls);
+  function ensureFontFace(weight) {
+    if (typeof document === "undefined")
+      return;
+    const styleId = `phosphor-icons-font-face-${weight}`;
+    if (document.getElementById(styleId))
+      return;
+    const styleEl = document.createElement("style");
+    styleEl.id = styleId;
+    styleEl.textContent = fontFaceCss(FONT_FAMILY[weight], options.fontUrls[weight]);
+    document.head.appendChild(styleEl);
+  }
+  function Icon2({ name, size = 16, color = "currentColor", weight = options.defaultWeight }) {
+    const resolvedWeight = resolveWeight(weight, available);
+    const codepoint = getCodepoint(name);
+    const glyph = typeof codepoint === "number" ? String.fromCodePoint(codepoint) : null;
+    React.useEffect(() => {
+      ensureFontFace(resolvedWeight);
+    }, [resolvedWeight]);
+    if (!glyph)
+      return null;
+    return jsx("span", { style: {
+      fontFamily: FONT_FAMILY[resolvedWeight],
+      fontSize: size,
+      color,
+      lineHeight: 1,
+      display: "inline-block"
+    }, "aria-hidden": true, children: glyph });
+  }
+  return Icon2;
 }
 
-export { Icon };
+// ../react/dist/Icon.js
+var Icon = createIcon({
+  defaultWeight: "regular",
+  fontUrls: FONT_URL
+});
+
+// public-config.ts
+function configure3(config) {
+  configure(config);
+}
+
+export { FONT_FAMILY, FONT_FILE, Icon, configure3 as configure };

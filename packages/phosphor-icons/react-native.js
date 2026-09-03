@@ -1,7 +1,7 @@
 import { jsx } from 'react/jsx-runtime';
 import { Text } from 'react-native';
 
-// ../react-native/dist/Icon.js
+// ../react-native/dist/createIcon.js
 
 // ../phosphor-core/dist/glyphMap.json
 var glyphMap_default = {
@@ -1519,8 +1519,7 @@ var glyphMap_default = {
   "youtube-logo": 61159
 };
 
-// ../phosphor-core/dist/src/index.js
-var glyphMap = glyphMap_default;
+// ../phosphor-core/dist/src/fonts.js
 var FONT_FAMILY = {
   thin: "Phosphor-Thin",
   light: "Phosphor-Light",
@@ -1529,31 +1528,79 @@ var FONT_FAMILY = {
   fill: "Phosphor-Fill",
   duotone: "Phosphor-Duotone"
 };
-var fontBase = import.meta.url.includes("/dist/") ? "../fonts/" : "./fonts/";
-({
-  thin: new URL(`${fontBase}Phosphor-Thin.ttf`, import.meta.url).href,
-  light: new URL(`${fontBase}Phosphor-Light.ttf`, import.meta.url).href,
-  regular: new URL(`${fontBase}Phosphor-Regular.ttf`, import.meta.url).href,
-  bold: new URL(`${fontBase}Phosphor-Bold.ttf`, import.meta.url).href,
-  fill: new URL(`${fontBase}Phosphor-Fill.ttf`, import.meta.url).href,
-  duotone: new URL(`${fontBase}Phosphor-Duotone.ttf`, import.meta.url).href
-});
+var WEIGHTS = Object.keys(FONT_FAMILY);
 
-// ../react-native/dist/Icon.js
-var defaultWeight = "regular";
+// ../phosphor-core/dist/src/fontFiles.js
+var FONT_FILE = {
+  thin: "Phosphor-Thin.ttf",
+  light: "Phosphor-Light.ttf",
+  regular: "Phosphor-Regular.ttf",
+  bold: "Phosphor-Bold.ttf",
+  fill: "Phosphor-Fill.ttf",
+  duotone: "Phosphor-Duotone.ttf"
+};
+
+// ../phosphor-core/dist/src/config.js
+var configuredWeights = WEIGHTS;
+function configure(config) {
+  if (!config.weights || config.weights.length === 0) {
+    configuredWeights = WEIGHTS;
+    return;
+  }
+  const unique = [];
+  for (const weight of config.weights) {
+    if (!WEIGHTS.includes(weight))
+      continue;
+    if (unique.includes(weight))
+      continue;
+    unique.push(weight);
+  }
+  configuredWeights = unique.length > 0 ? unique : WEIGHTS;
+}
+function getConfiguredWeights() {
+  return configuredWeights;
+}
+function resolveWeight(requested, available) {
+  const configured = getConfiguredWeights();
+  const usable = available.filter((weight) => configured.includes(weight));
+  const pool = usable.length > 0 ? usable : available;
+  if (pool.includes(requested))
+    return requested;
+  if (pool.includes("regular"))
+    return "regular";
+  return pool[0];
+}
+
+// ../phosphor-core/dist/src/index.js
+var glyphMap = glyphMap_default;
+
+// ../react-native/dist/createIcon.js
 function getCodepoint(name) {
   return glyphMap[name];
 }
-function Icon({ name, size = 16, color = "black", weight = defaultWeight }) {
-  const codepoint = getCodepoint(name);
-  const glyph = typeof codepoint === "number" ? String.fromCodePoint(codepoint) : null;
-  if (!glyph)
-    return null;
-  return jsx(Text, { style: {
-    fontFamily: FONT_FAMILY[weight],
-    fontSize: size,
-    color
-  }, allowFontScaling: false, selectable: false, children: glyph });
+function createIcon(options) {
+  const available = options.weights ?? Object.keys(FONT_FAMILY);
+  function Icon2({ name, size = 16, color = "black", weight = options.defaultWeight }) {
+    const resolvedWeight = resolveWeight(weight, available);
+    const codepoint = getCodepoint(name);
+    const glyph = typeof codepoint === "number" ? String.fromCodePoint(codepoint) : null;
+    if (!glyph)
+      return null;
+    return jsx(Text, { style: {
+      fontFamily: FONT_FAMILY[resolvedWeight],
+      fontSize: size,
+      color
+    }, allowFontScaling: false, selectable: false, children: glyph });
+  }
+  return Icon2;
 }
 
-export { Icon };
+// ../react-native/dist/Icon.js
+var Icon = createIcon({ defaultWeight: "regular" });
+
+// public-config.ts
+function configure3(config) {
+  configure(config);
+}
+
+export { FONT_FAMILY, FONT_FILE, Icon, configure3 as configure };

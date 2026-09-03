@@ -5,28 +5,11 @@ export const glyphMap: Record<string, number> = glyphMapJson as Record<string, n
 
 export type { IconName };
 
-export const FONT_FAMILY = {
-  thin: "Phosphor-Thin",
-  light: "Phosphor-Light",
-  regular: "Phosphor-Regular",
-  bold: "Phosphor-Bold",
-  fill: "Phosphor-Fill",
-  duotone: "Phosphor-Duotone"
-} as const;
+export { FONT_FAMILY, WEIGHTS } from "./fonts";
+export type { Weight } from "./fonts";
+export { FONT_FILE } from "./fontFiles";
+export { configure, getConfiguredWeights, resolveWeight, resetConfig } from "./config";
+export type { PhosphorIconsConfig } from "./config";
 
-export type Weight = keyof typeof FONT_FAMILY;
-
-// Web renderer can use these URLs in @font-face rules.
-const fontBase = import.meta.url.includes("/dist/")
-  ? "../fonts/" // when running from `phosphor-core/dist/*`
-  : "./fonts/"; // when bundled into the unified package root
-
-export const FONT_URL = {
-  thin: new URL(`${fontBase}Phosphor-Thin.ttf`, import.meta.url).href,
-  light: new URL(`${fontBase}Phosphor-Light.ttf`, import.meta.url).href,
-  regular: new URL(`${fontBase}Phosphor-Regular.ttf`, import.meta.url).href,
-  bold: new URL(`${fontBase}Phosphor-Bold.ttf`, import.meta.url).href,
-  fill: new URL(`${fontBase}Phosphor-Fill.ttf`, import.meta.url).href,
-  duotone: new URL(`${fontBase}Phosphor-Duotone.ttf`, import.meta.url).href,
-} as const;
-
+// Import FONT_URL from `phosphor-core/font-urls` so single-weight entries
+// and React Native do not evaluate every `new URL(...ttf)`.

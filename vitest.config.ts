@@ -11,6 +11,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      // More specific subpaths must come before `phosphor-core`.
+      "phosphor-core/font-urls": path.join(repoRoot, "packages", "phosphor-core", "src", "fontUrls.ts"),
       // Let tests import from TS source even though `phosphor-core` is build-time only.
       "phosphor-core": path.join(repoRoot, "packages", "phosphor-core", "src", "index.ts"),
       // `react-native` contains Flow syntax that Vite/Rolldown can't parse.

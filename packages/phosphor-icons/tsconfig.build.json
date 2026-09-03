@@ -7,6 +7,24 @@
     "emitDeclarationOnly": false,
     "noEmit": false
   },
-  "include": ["./Icon.tsx", "./Icon.native.tsx", "./index.ts", "./react.tsx", "./react-native.tsx"]
+  "include": [
+    "./Icon.tsx",
+    "./Icon.native.tsx",
+    "./index.ts",
+    "./react.tsx",
+    "./react-native.tsx",
+    "./thin.tsx",
+    "./thin.native.tsx",
+    "./light.tsx",
+    "./light.native.tsx",
+    "./regular.tsx",
+    "./regular.native.tsx",
+    "./bold.tsx",
+    "./bold.native.tsx",
+    "./fill.tsx",
+    "./fill.native.tsx",
+    "./duotone.tsx",
+    "./duotone.native.tsx",
+    "./public-config.ts"
+  ]
 }
-
