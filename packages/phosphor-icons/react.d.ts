@@ -1,5 +1,5 @@
 import * as react from 'react';
-import { I as IconName } from './IconName.d-B2jRY55Q.d-B2jRY55Q.d-B2jRY55Q.d-B2jRY55Q.d-B2jRY55Q.d-B2jRY55Q.d-B2jRY55Q.d-B2jRY55Q.d-B2jRY55Q.d-B2jRY55Q.d-B2jRY55Q.d-B2jRY55Q.js';
+import { I as IconName } from './IconName.d-B2jRY55Q.d-B2jRY55Q.d-B2jRY55Q.d-B2jRY55Q.d-B2jRY55Q.d-B2jRY55Q.d-B2jRY55Q.d-B2jRY55Q.d-B2jRY55Q.d-B2jRY55Q.d-B2jRY55Q.d-B2jRY55Q.d-B2jRY55Q.js';
 
 declare const FONT_FAMILY: {
     readonly thin: "Phosphor-Thin";
