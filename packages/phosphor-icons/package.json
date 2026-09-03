@@ -1,0 +1,34 @@
+{
+  "name": "phosphor-vector-icons",
+  "version": "0.0.0",
+  "description": "Font-based Phosphor icon renderer for React web + React Native.",
+  "type": "module",
+  "main": "./react.js",
+  "types": "./react.d.ts",
+  "exports": {
+    ".": {
+      "react-native": "./react-native.js",
+      "browser": "./react.js",
+      "default": "./react.js"
+    }
+  },
+  "files": [
+    "react.js",
+    "react-native.js",
+    "react.d.ts",
+    "react-native.d.ts",
+    "fonts",
+    "glyphMap.json",
+    "IconName.ts",
+    "react-native.config.js"
+  ],
+  "scripts": {
+    "prebuild": "node ./copy-core-artifacts.mjs",
+    "build": "tsup --config tsup.config.ts",
+    "prepack": "pnpm build"
+  },
+  "peerDependencies": {
+    "react": ">=16",
+    "react-native": ">=0.70"
+  }
+}

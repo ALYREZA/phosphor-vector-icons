@@ -1,0 +1,30 @@
+{
+  "name": "phosphor-icons-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Monorepo for the phosphor-icons npm package.",
+  "type": "module",
+  "packageManager": "pnpm@11.21.0",
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "vitest run",
+    "generate": "pnpm -r generate",
+    "lint": "echo \"(lint not configured yet)\"",
+    "update-phosphor": "pnpm tsx scripts/update-phosphor.ts",
+    "generate-icons": "pnpm tsx scripts/generate-icons.ts"
+  },
+  "devDependencies": {
+    "@phosphor-icons/core": "^2.1.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/react-native": "^14.0.1",
+    "iconv-lite": "^0.7.3",
+    "jsdom": "^30.0.1",
+    "react": "^19.2.8",
+    "react-native": "^0.87.1",
+    "react-test-renderer": "^19.2.8",
+    "svgtofont": "^6.5.3",
+    "tsx": "^4.23.13",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.11"
+  }
+}

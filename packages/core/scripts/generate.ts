@@ -1,0 +1,250 @@
+import fs from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import svgtofont from "svgtofont";
+
+type Weight = "thin" | "light" | "regular" | "bold" | "fill" | "duotone";
+
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../");
+const coreDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+
+const ASSETS_DIR = path.join(repoRoot, "node_modules", "@phosphor-icons", "core", "assets");
+const OUT_FONTS_DIR = path.join(coreDir, "fonts");
+const OUT_GLYPH_MAP_JSON = path.join(coreDir, "glyphMap.json");
+
+const OUT_SRC_DIR = path.join(coreDir, "src");
+
+const START_UNICODE = 0xe900; // keep stable with upstream Phosphor codepoints
+
+const WEIGHTS: Weight[] = ["thin", "light", "regular", "bold", "fill", "duotone"];
+
+const FONT_NAME_BY_WEIGHT: Record<Weight, string> = {
+  thin: "Phosphor-Thin",
+  light: "Phosphor-Light",
+  regular: "Phosphor-Regular",
+  bold: "Phosphor-Bold",
+  fill: "Phosphor-Fill",
+  duotone: "Phosphor-Duotone",
+};
+
+const SUFFIX_BY_WEIGHT: Record<Weight, string> = {
+  thin: "-thin",
+  light: "-light",
+  regular: "",
+  bold: "-bold",
+  fill: "-fill",
+  duotone: "-duotone",
+};
+
+const EXCLUDE_FORMAT: Array<
+  "eot" | "woff" | "woff2" | "svg" | "ttf" | "symbol.svg"
+> = ["eot", "woff", "woff2", "svg", "symbol.svg"];
+
+function stripWeightSuffix(glyphName: string, weight: Weight): string {
+  const suffix = SUFFIX_BY_WEIGHT[weight];
+  if (!suffix) return glyphName;
+  return glyphName.endsWith(suffix) ? glyphName.slice(0, -suffix.length) : glyphName;
+}
+
+function parseCodepointFromUnicode(unicodeEntity: string): number | undefined {
+  // svgtofont format: "&#59905;"
+  const match = unicodeEntity.match(/&#(\d+);/);
+  if (!match) return undefined;
+  return Number(match[1]);
+}
+
+export function validateGlyphMap(glyphMap: Record<string, number>): void {
+  if (Object.keys(glyphMap).length === 0) throw new Error("glyphMap is empty");
+  for (const [k, v] of Object.entries(glyphMap)) {
+    if (!Number.isFinite(v) || Math.floor(v) !== v) {
+      throw new Error(`Invalid codepoint for icon "${k}": ${String(v)}`);
+    }
+  }
+}
+
+async function ensureOutDirs() {
+  await fs.mkdir(OUT_FONTS_DIR, { recursive: true });
+  await fs.mkdir(OUT_SRC_DIR, { recursive: true });
+}
+
+async function listRegularIconNames(): Promise<string[]> {
+  const regularDir = path.join(ASSETS_DIR, "regular");
+  const entries = await fs.readdir(regularDir, { withFileTypes: true });
+  return entries
+    .filter((e) => e.isFile() && e.name.endsWith(".svg"))
+    .map((e) => e.name.slice(0, -".svg".length))
+    .sort((a, b) => a.localeCompare(b));
+}
+
+async function generateGlyphMapFromRegularSvgs(): Promise<Record<string, number>> {
+  const regularDir = path.join(ASSETS_DIR, "regular");
+
+  const infoData = await svgtofont({
+    src: regularDir,
+    dist: OUT_FONTS_DIR,
+    fontName: FONT_NAME_BY_WEIGHT.regular,
+    css: false,
+    log: false,
+    startUnicode: START_UNICODE,
+    excludeFormat: EXCLUDE_FORMAT,
+    generateInfoData: true,
+  });
+
+  const glyphMap: Record<string, number> = {};
+
+  for (const [name, info] of Object.entries(infoData as Record<string, any>)) {
+    const cp = parseCodepointFromUnicode(info?.unicode);
+    if (typeof cp === "number") glyphMap[name] = cp;
+  }
+
+  if (Object.keys(glyphMap).length === 0) {
+    throw new Error("Failed to generate glyphMap from regular svgs.");
+  }
+
+  return glyphMap;
+}
+
+async function generateFontsForOtherWeights(glyphMap: Record<string, number>) {
+  const otherWeights = WEIGHTS.filter((w) => w !== "regular");
+
+  for (const weight of otherWeights) {
+    const weightDir = path.join(ASSETS_DIR, weight);
+    await svgtofont({
+      src: weightDir,
+      dist: OUT_FONTS_DIR,
+      fontName: FONT_NAME_BY_WEIGHT[weight],
+      css: false,
+      log: false,
+      startUnicode: START_UNICODE,
+      excludeFormat: EXCLUDE_FORMAT,
+      generateInfoData: false,
+      // Force stable codepoints based on glyphMap derived from regular run.
+      getIconUnicode: (glyphName: string) => {
+        const baseName = stripWeightSuffix(glyphName, weight);
+        const cp = glyphMap[baseName];
+        const unicodeChar = typeof cp === "number" ? String.fromCodePoint(cp) : "";
+
+        // Returning 0 prevents svgtofont from moving `startUnicode` based on matches.
+        return [unicodeChar, 0];
+      },
+    });
+  }
+}
+
+function iconMapStableOrder(glyphMap: Record<string, number>): Record<string, number> {
+  const sortedKeys = Object.keys(glyphMap).sort((a, b) => a.localeCompare(b));
+  const out: Record<string, number> = {};
+  for (const k of sortedKeys) out[k] = glyphMap[k];
+  return out;
+}
+
+function glyphMapTsTemplate() {
+  return `import glyphMapJson from "../glyphMap.json";
+
+// Source-of-truth mapping (unicode codepoint per icon name).
+// Kept in \`glyphMap.json\` so it can be regenerated without hand-editing.
+export const glyphMap = glyphMapJson;
+`;
+}
+
+function typesTsTemplate() {
+  return `import { glyphMap } from "./glyphMap";
+
+export type IconName = keyof typeof glyphMap;
+
+// Runtime list of all icon names (useful for validation/tests).
+export const iconNames = Object.keys(glyphMap) as IconName[];
+`;
+}
+
+function metadataTsTemplate() {
+  return `import { glyphMap } from "./glyphMap";
+import type { IconName } from "./types";
+
+export type IconMetadata = {
+  name: IconName;
+  tags: readonly string[];
+};
+
+// Small tag aliasing to make common icons more meaningful for search/filter.
+const TAG_ALIASES: Record<string, readonly string[]> = {
+  user: ["person", "profile"],
+  person: ["person", "profile"],
+  heart: ["love", "emotion"],
+  house: ["home", "building"],
+};
+
+function deriveTagsFromName(name: IconName): readonly string[] {
+  const parts = name.split("-").filter(Boolean);
+  const out: string[] = [];
+  const seen = new Set<string>();
+
+  for (const part of parts) {
+    const aliases = TAG_ALIASES[part] ?? [part];
+    for (const a of aliases) {
+      if (seen.has(a)) continue;
+      seen.add(a);
+      out.push(a);
+    }
+  }
+
+  // Keep tags compact so consumers can use them for filters without extra work.
+  return out.slice(0, 6);
+}
+
+export const iconMetadata = Object.fromEntries(
+  (Object.keys(glyphMap) as IconName[]).map((name) => [
+    name,
+    {
+      name,
+      tags: deriveTagsFromName(name),
+    },
+  ]),
+) as Record<IconName, IconMetadata>;
+`;
+}
+
+export async function generateCodeArtifacts(
+  glyphMap: Record<string, number>,
+  opts?: {
+    outSrcDir?: string;
+    outGlyphMapJsonPath?: string;
+  },
+) {
+  validateGlyphMap(glyphMap);
+
+  const outSrcDir = opts?.outSrcDir ?? OUT_SRC_DIR;
+  const outGlyphMapJsonPath = opts?.outGlyphMapJsonPath ?? OUT_GLYPH_MAP_JSON;
+
+  await fs.mkdir(outSrcDir, { recursive: true });
+
+  await fs.writeFile(
+    outGlyphMapJsonPath,
+    JSON.stringify(iconMapStableOrder(glyphMap), null, 2),
+    "utf-8",
+  );
+  await fs.writeFile(path.join(outSrcDir, "glyphMap.ts"), glyphMapTsTemplate(), "utf-8");
+  await fs.writeFile(path.join(outSrcDir, "types.ts"), typesTsTemplate(), "utf-8");
+  await fs.writeFile(path.join(outSrcDir, "metadata.ts"), metadataTsTemplate(), "utf-8");
+}
+
+async function main() {
+  await ensureOutDirs();
+
+  // Sanity: `@phosphor-icons/core` should always include regular SVGs.
+  await listRegularIconNames();
+
+  const glyphMap = await generateGlyphMapFromRegularSvgs();
+  validateGlyphMap(glyphMap);
+
+  // Generate TTFs for all other weights at stable codepoints.
+  await generateFontsForOtherWeights(glyphMap);
+
+  await generateCodeArtifacts(glyphMap);
+}
+
+main().catch((err) => {
+  console.error(err);
+  process.exitCode = 1;
+});
+

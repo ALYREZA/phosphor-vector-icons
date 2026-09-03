@@ -1,0 +1,19 @@
+{
+  "name": "@phosphor-icons/core-foundation",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "glyphMap.json",
+    "fonts"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "generate": "tsx scripts/generate.ts",
+    "update-phosphor": "tsx scripts/update-phosphor.ts"
+  },
+  "dependencies": {}
+}

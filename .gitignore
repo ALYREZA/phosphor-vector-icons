@@ -1,0 +1,14 @@
+# Dependencies
+node_modules
+
+# Local pnpm content-addressable store (created when using --store-dir)
+.pnpm-store
+
+# Build outputs
+dist
+**/dist
+
+# Misc
+.DS_Store
+coverage
+

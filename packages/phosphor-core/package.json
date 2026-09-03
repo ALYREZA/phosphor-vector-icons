@@ -1,0 +1,20 @@
+{
+  "name": "phosphor-core",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "fonts",
+    "glyphMap.json",
+    "IconName.ts"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "dependencies": {}
+}
+
