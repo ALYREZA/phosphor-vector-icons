@@ -26,3 +26,7 @@ for (const file of fs.readdirSync(path.join(coreDir, "fonts"))) {
 fs.copyFileSync(path.join(coreDir, "glyphMap.json"), path.join(targetDir, "glyphMap.json"));
 fs.copyFileSync(path.join(coreDir, "IconName.ts"), path.join(targetDir, "IconName.ts"));
 
+// npm publishes from this package directory — copy docs into the tarball.
+fs.copyFileSync(path.join(repoRoot, "LICENSE"), path.join(targetDir, "LICENSE"));
+fs.copyFileSync(path.join(repoRoot, "README.md"), path.join(targetDir, "README.md"));
+

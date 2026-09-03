@@ -21,4 +21,9 @@ pnpm start
 
 Then open iOS Simulator, Android emulator, or Expo Go.
 
+This example renders every weight: `thin`, `light`, `regular`, `bold`, `fill`, `duotone`.
+
+Fonts loaded via `expo-font`:
+`Phosphor-Thin`, `Phosphor-Light`, `Phosphor-Regular`, `Phosphor-Bold`, `Phosphor-Fill`, `Phosphor-Duotone`.
+
 If you see empty boxes instead of icons, the fonts did not load — confirm `packages/phosphor-icons/fonts/*.ttf` exist after `pnpm generate-icons && pnpm build`.

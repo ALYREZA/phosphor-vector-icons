@@ -1,8 +1,8 @@
 import * as React from "react";
-import type { IconName } from "phosphor-core";
+import type { IconName, Weight } from "phosphor-core";
 import { glyphMap, FONT_FAMILY, FONT_URL } from "phosphor-core";
 
-export type Weight = "thin" | "light" | "regular" | "bold" | "fill";
+export type { Weight };
 
 export type IconProps = {
   name: IconName | (string & {});
@@ -27,13 +27,12 @@ function ensureFontFacesInjected() {
 
   const styleEl = document.createElement("style");
   styleEl.id = styleId;
-  styleEl.textContent = [
-    `@font-face { font-family: "${FONT_FAMILY.thin}"; src: url("${FONT_URL.thin}") format("truetype"); font-style: normal; font-weight: 400; }`,
-    `@font-face { font-family: "${FONT_FAMILY.light}"; src: url("${FONT_URL.light}") format("truetype"); font-style: normal; font-weight: 400; }`,
-    `@font-face { font-family: "${FONT_FAMILY.regular}"; src: url("${FONT_URL.regular}") format("truetype"); font-style: normal; font-weight: 400; }`,
-    `@font-face { font-family: "${FONT_FAMILY.bold}"; src: url("${FONT_URL.bold}") format("truetype"); font-style: normal; font-weight: 400; }`,
-    `@font-face { font-family: "${FONT_FAMILY.fill}"; src: url("${FONT_URL.fill}") format("truetype"); font-style: normal; font-weight: 400; }`,
-  ].join("\n");
+  styleEl.textContent = (Object.keys(FONT_FAMILY) as Weight[])
+    .map(
+      (weight) =>
+        `@font-face { font-family: "${FONT_FAMILY[weight]}"; src: url("${FONT_URL[weight]}") format("truetype"); font-style: normal; font-weight: 400; }`
+    )
+    .join("\n");
 
   document.head.appendChild(styleEl);
   didInjectFontFaces = true;
@@ -68,4 +67,3 @@ export function Icon({ name, size = 16, color = "currentColor", weight = default
     </span>
   );
 }
-

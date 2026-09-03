@@ -1,0 +1,51 @@
+name: Update phosphor icons
+
+on:
+  schedule:
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Enable pnpm
+        run: corepack enable
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install
+        run: pnpm install
+
+      - name: Update @phosphor-icons/core and regenerate artifacts
+        run: pnpm update-phosphor
+
+      - name: Detect changes
+        id: changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Bump version, commit, and publish
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          pnpm --filter phosphor-vector-icons exec npm version patch --no-git-tag-version
+          git add -A
+          git commit -m "chore: update phosphor icons"
+          git push
+          pnpm --filter phosphor-vector-icons publish --no-git-checks

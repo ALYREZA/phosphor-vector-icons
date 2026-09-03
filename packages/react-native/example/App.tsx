@@ -1,7 +1,17 @@
 import * as React from "react";
-import { View, Text, ActivityIndicator } from "react-native";
+import { View, Text, ActivityIndicator, ScrollView } from "react-native";
+import type { Weight } from "phosphor-vector-icons";
 import { Icon } from "phosphor-vector-icons";
 import { usePhosphorFonts } from "./usePhosphorFonts";
+
+const WEIGHTS: Array<{ weight: Weight; color: string }> = [
+  { weight: "thin", color: "#64748b" },
+  { weight: "light", color: "#0ea5e9" },
+  { weight: "regular", color: "#ef4444" },
+  { weight: "bold", color: "#22c55e" },
+  { weight: "fill", color: "#3b82f6" },
+  { weight: "duotone", color: "#a855f7" }
+];
 
 function Row({
   title,
@@ -11,7 +21,7 @@ function Row({
   children: React.ReactNode;
 }) {
   return (
-    <View style={{ flexDirection: "row", alignItems: "center" }}>
+    <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 16 }}>
       <View style={{ marginRight: 12 }}>{children}</View>
       <Text style={{ color: "#333" }}>{title}</Text>
     </View>
@@ -30,30 +40,22 @@ export default function App() {
   }
 
   return (
-    <View style={{ flex: 1, padding: 24 }}>
-      <View style={{ marginBottom: 16 }}>
-        <Row title="user / regular">
-          <Icon name="user" size={48} weight="regular" color="red" />
-        </Row>
-      </View>
+    <ScrollView contentContainerStyle={{ padding: 24 }}>
+      <Text style={{ fontSize: 20, fontWeight: "600", marginBottom: 16 }}>
+        phosphor-vector-icons — Expo
+      </Text>
 
-      <View style={{ marginBottom: 16 }}>
-        <Row title="user / bold">
-          <Icon name="user" size={48} weight="bold" color="green" />
+      {WEIGHTS.map(({ weight, color }) => (
+        <Row key={weight} title={`user / ${weight}`}>
+          <Icon name="user" size={48} weight={weight} color={color} />
         </Row>
-      </View>
-
-      <View style={{ marginBottom: 16 }}>
-        <Row title="user / fill">
-          <Icon name="user" size={48} weight="fill" color="blue" />
-        </Row>
-      </View>
+      ))}
 
       {/* Invalid icon name should render nothing (no crash). */}
       <View style={{ opacity: 0.7 }}>
         <Icon name={"not-real" as any} size={48} weight="regular" color="black" />
+        <Text style={{ color: "#666" }}>invalid icon name → no glyph</Text>
       </View>
-    </View>
+    </ScrollView>
   );
 }
-

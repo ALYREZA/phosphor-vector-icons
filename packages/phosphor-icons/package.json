@@ -2,6 +2,28 @@
   "name": "phosphor-vector-icons",
   "version": "0.1.0",
   "description": "Font-based Phosphor icon renderer for React web + React Native.",
+  "license": "MIT",
+  "author": "ALYREZA",
+  "homepage": "https://github.com/ALYREZA/phosphor-vector-icons#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ALYREZA/phosphor-vector-icons.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ALYREZA/phosphor-vector-icons/issues"
+  },
+  "keywords": [
+    "phosphor",
+    "icons",
+    "react",
+    "react-native",
+    "font",
+    "icon-font"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "type": "module",
   "main": "./react.js",
   "types": "./react.d.ts",
@@ -21,17 +43,14 @@
     "fonts",
     "glyphMap.json",
     "IconName.ts",
-    "react-native.config.js"
+    "react-native.config.js",
+    "LICENSE",
+    "README.md"
   ],
   "scripts": {
     "prebuild": "node ./copy-core-artifacts.mjs",
     "build": "tsup --config tsup.config.ts",
     "prepack": "pnpm build"
-  },
-  "dependencies": {
-    "phosphor-core": "workspace:*",
-    "phosphor-icons-react": "workspace:*",
-    "phosphor-icons-react-native": "workspace:*"
   },
   "peerDependencies": {
     "react": ">=16",
@@ -44,6 +63,9 @@
   },
   "devDependencies": {
     "@types/react": "^19.2.14",
+    "phosphor-core": "workspace:*",
+    "phosphor-icons-react": "workspace:*",
+    "phosphor-icons-react-native": "workspace:*",
     "tsup": "^8.5.1",
     "typescript": "~5.8.3"
   }

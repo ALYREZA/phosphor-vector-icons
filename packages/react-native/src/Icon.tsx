@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Text } from "react-native";
-import type { IconName } from "phosphor-core";
+import type { IconName, Weight } from "phosphor-core";
 import { glyphMap, FONT_FAMILY } from "phosphor-core";
 
-export type Weight = "thin" | "light" | "regular" | "bold" | "fill";
+export type { Weight };
 
 export type IconProps = {
   name: IconName | (string & {});
@@ -38,4 +38,3 @@ export function Icon({ name, size = 16, color = "black", weight = defaultWeight 
     </Text>
   );
 }
-

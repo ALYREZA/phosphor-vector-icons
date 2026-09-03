@@ -40,6 +40,7 @@ Supported weights:
 - `regular`
 - `bold`
 - `fill`
+- `duotone`
 
 ## Backend-driven payloads
 
@@ -57,7 +58,7 @@ Then render it without importing individual icons:
 ```tsx
 import { Icon } from "phosphor-vector-icons";
 
-type Payload = { icon: string; weight: "thin" | "light" | "regular" | "bold" | "fill" };
+type Payload = { icon: string; weight: "thin" | "light" | "regular" | "bold" | "fill" | "duotone" };
 
 export function BackendIcon({ payload }: { payload: Payload }) {
   return <Icon name={payload.icon as any} weight={payload.weight} size={24} color="black" />;

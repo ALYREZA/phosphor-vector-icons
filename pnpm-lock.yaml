@@ -250,15 +250,6 @@ importers:
 
   packages/phosphor-icons:
     dependencies:
-      phosphor-core:
-        specifier: workspace:*
-        version: link:../phosphor-core
-      phosphor-icons-react:
-        specifier: workspace:*
-        version: link:../react
-      phosphor-icons-react-native:
-        specifier: workspace:*
-        version: link:../react-native
       react:
         specifier: '>=16'
         version: 19.2.8
@@ -269,6 +260,15 @@ importers:
       '@types/react':
         specifier: ^19.2.14
         version: 19.2.18
+      phosphor-core:
+        specifier: workspace:*
+        version: link:../phosphor-core
+      phosphor-icons-react:
+        specifier: workspace:*
+        version: link:../react
+      phosphor-icons-react-native:
+        specifier: workspace:*
+        version: link:../react-native
       tsup:
         specifier: ^8.5.1
         version: 8.5.1(jiti@2.7.0)(postcss@8.5.26)(supports-color@8.1.1)(tsx@4.23.13)(typescript@5.8.3)(yaml@2.9.0)

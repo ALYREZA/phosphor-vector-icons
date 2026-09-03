@@ -5,8 +5,6 @@ export const glyphMap: Record<string, number> = glyphMapJson as Record<string, n
 
 export type { IconName };
 
-export type Weight = keyof typeof FONT_FAMILY;
-
 export const FONT_FAMILY = {
   thin: "Phosphor-Thin",
   light: "Phosphor-Light",
@@ -15,6 +13,8 @@ export const FONT_FAMILY = {
   fill: "Phosphor-Fill",
   duotone: "Phosphor-Duotone"
 } as const;
+
+export type Weight = keyof typeof FONT_FAMILY;
 
 // Web renderer can use these URLs in @font-face rules.
 const fontBase = import.meta.url.includes("/dist/")

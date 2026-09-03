@@ -1,9 +1,12 @@
 // @vitest-environment jsdom
-import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
+import { describe, expect, it, beforeEach } from "vitest";
 import * as React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import { Icon } from "../packages/react/src/Icon";
 import { glyphMap, FONT_FAMILY } from "phosphor-core";
+import type { Weight } from "phosphor-core";
+
+const WEIGHTS = Object.keys(FONT_FAMILY) as Weight[];
 
 describe("React web renderer", () => {
   beforeEach(() => {
@@ -22,17 +25,20 @@ describe("React web renderer", () => {
       const styleEl = document.getElementById("phosphor-icons-font-face");
       expect(styleEl).toBeTruthy();
       expect(styleEl?.textContent).toContain("@font-face");
+      for (const weight of WEIGHTS) {
+        expect(styleEl?.textContent).toContain(FONT_FAMILY[weight]);
+      }
     });
   });
 
-  it("selects fontFamily based on weight", () => {
+  it.each(WEIGHTS)("selects fontFamily for weight=%s", (weight) => {
     const cp = glyphMap["user"];
     const glyph = String.fromCodePoint(cp);
 
-    render(<Icon name="user" size={24} color="black" weight="bold" />);
+    render(<Icon name="user" size={24} color="black" weight={weight} />);
 
     const span = screen.getByText(glyph) as HTMLSpanElement;
-    expect(span.style.fontFamily).toBe(FONT_FAMILY.bold);
+    expect(span.style.fontFamily).toBe(FONT_FAMILY[weight]);
     expect(span.style.fontSize).toBe("24px");
     expect(span.style.color).toBe("black");
   });
@@ -42,4 +48,3 @@ describe("React web renderer", () => {
     expect(container.querySelector("span")).toBeNull();
   });
 });
-

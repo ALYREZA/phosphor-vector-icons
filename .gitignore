@@ -8,6 +8,10 @@ node_modules
 dist
 **/dist
 
+# Copied into the publish package at build time
+packages/phosphor-icons/LICENSE
+packages/phosphor-icons/README.md
+
 # Misc
 .DS_Store
 coverage
