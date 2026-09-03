@@ -1,0 +1,25 @@
+{
+  "name": "phosphor-icons-expo-example",
+  "private": true,
+  "version": "0.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "prestart": "pnpm --filter phosphor-vector-icons build",
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "expo": "~57.0.19",
+    "expo-font": "~57.0.3",
+    "expo-status-bar": "~57.0.1",
+    "phosphor-vector-icons": "workspace:*",
+    "react": "19.2.3",
+    "react-native": "0.86.3"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "typescript": "~5.8.3"
+  }
+}

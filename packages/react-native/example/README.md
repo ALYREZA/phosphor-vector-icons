@@ -1,16 +1,24 @@
-# Expo (React Native) example (template)
+# Expo example
 
-This `App.tsx` renders `phosphor-vector-icons` using Expo’s `expo-font`.
+Runnable Expo app that renders `phosphor-vector-icons` after loading the TTF fonts with `expo-font`.
 
-## Use
-1. In your Expo project:
-   - `pnpm add phosphor-vector-icons`
-   - `npx expo install expo-font`
-2. (If you are testing from this repo source) run at the monorepo root:
-   - `pnpm build`
-3. Copy both `App.tsx` and `usePhosphorFonts.ts` from this folder into your Expo project.
+## Run
 
-## Why `expo-font` is needed
-On React Native / Expo, fonts don’t get auto-registered. This template loads:
-`Phosphor-Thin`, `Phosphor-Light`, `Phosphor-Regular`, `Phosphor-Bold`, `Phosphor-Fill`.
+From the repo root:
 
+```bash
+pnpm install
+pnpm generate-icons   # if `packages/phosphor-icons/fonts/*.ttf` are missing
+pnpm build
+pnpm dev:expo
+```
+
+Or from this folder:
+
+```bash
+pnpm start
+```
+
+Then open iOS Simulator, Android emulator, or Expo Go.
+
+If you see empty boxes instead of icons, the fonts did not load — confirm `packages/phosphor-icons/fonts/*.ttf` exist after `pnpm generate-icons && pnpm build`.

@@ -11,7 +11,9 @@
     "generate": "pnpm -r generate",
     "lint": "echo \"(lint not configured yet)\"",
     "update-phosphor": "pnpm tsx scripts/update-phosphor.ts",
-    "generate-icons": "pnpm tsx scripts/generate-icons.ts"
+    "generate-icons": "pnpm tsx scripts/generate-icons.ts",
+    "dev:react": "pnpm --filter phosphor-icons-react-example dev",
+    "dev:expo": "pnpm --filter phosphor-icons-expo-example start"
   },
   "devDependencies": {
     "@phosphor-icons/core": "^2.1.1",

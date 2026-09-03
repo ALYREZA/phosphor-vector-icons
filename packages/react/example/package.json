@@ -1,0 +1,23 @@
+{
+  "name": "phosphor-icons-react-example",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "predev": "pnpm --filter phosphor-vector-icons build",
+    "dev": "vite",
+    "start": "vite"
+  },
+  "dependencies": {
+    "phosphor-vector-icons": "workspace:*",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.4",
+    "typescript": "~5.8.3",
+    "vite": "^7.3.1"
+  }
+}

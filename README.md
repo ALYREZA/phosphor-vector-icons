@@ -94,7 +94,26 @@ pnpm test
 
 ## Contributor examples
 
-If you want to quickly verify the renderer in a real app (instead of unit tests), see:
-- `packages/react/example` (React web usage template)
-- `packages/react-native/example` (Expo / React Native usage template + `expo-font` setup)
+Run the package in a real app from this repo (after `pnpm install` and `pnpm build`):
+
+```bash
+pnpm generate-icons   # if fonts are missing
+pnpm build
+
+# React web (Vite)
+pnpm dev:react
+
+# Expo / React Native
+pnpm dev:expo
+```
+
+Or from the example folders:
+
+```bash
+pnpm --filter phosphor-icons-react-example dev
+pnpm --filter phosphor-icons-expo-example start
+```
+
+- `packages/react/example` — Vite app
+- `packages/react-native/example` — Expo app (`expo-font` loads the TTFs)
 

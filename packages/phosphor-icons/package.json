@@ -10,7 +10,8 @@
       "react-native": "./react-native.js",
       "browser": "./react.js",
       "default": "./react.js"
-    }
+    },
+    "./fonts/*": "./fonts/*"
   },
   "files": [
     "react.js",
@@ -35,6 +36,11 @@
   "peerDependencies": {
     "react": ">=16",
     "react-native": ">=0.70"
+  },
+  "peerDependenciesMeta": {
+    "react-native": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@types/react": "^19.2.14",

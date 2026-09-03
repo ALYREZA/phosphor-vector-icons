@@ -11,4 +11,8 @@ dist
 # Misc
 .DS_Store
 coverage
+.expo
+**/.expo
+.vite
+**/.vite
 
