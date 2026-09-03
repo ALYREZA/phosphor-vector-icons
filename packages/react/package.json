@@ -13,6 +13,9 @@
   },
   "peerDependencies": {
     "react": ">=16"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14"
   }
 }
 

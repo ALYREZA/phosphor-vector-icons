@@ -6,11 +6,20 @@ export default defineConfig({
     "react-native": "./react-native.tsx"
   },
   format: ["esm"],
-  dts: true,
+  tsconfig: "./tsconfig.build.json",
+  dts: {
+    resolve: true
+  },
   outDir: ".",
-  clean: true,
+  // outDir is the package root; do not wipe sources/fonts.
+  clean: false,
   splitting: false,
   external: ["react", "react-native"],
+  noExternal: [
+    "phosphor-core",
+    "phosphor-icons-react",
+    "phosphor-icons-react-native"
+  ],
   treeshake: true,
   esbuildOptions(options) {
     // Keep code size small; no need for test helpers.

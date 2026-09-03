@@ -27,8 +27,18 @@
     "build": "tsup --config tsup.config.ts",
     "prepack": "pnpm build"
   },
+  "dependencies": {
+    "phosphor-core": "workspace:*",
+    "phosphor-icons-react": "workspace:*",
+    "phosphor-icons-react-native": "workspace:*"
+  },
   "peerDependencies": {
     "react": ">=16",
     "react-native": ">=0.70"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "tsup": "^8.5.1",
+    "typescript": "~5.8.3"
   }
 }
