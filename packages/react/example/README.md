@@ -20,3 +20,5 @@ pnpm dev
 ```
 
 Vite prints a local URL (usually `http://localhost:5173`).
+
+This example renders every weight: `thin`, `light`, `regular`, `bold`, `fill`, `duotone`.
