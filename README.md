@@ -1,4 +1,4 @@
-# phosphor-vector-icons
+# phosphor-vector-icons   [![install size](https://packagephobia.com/badge?p=phosphor-vector-icons)](https://packagephobia.com/result?p=phosphor-vector-icons)
 
 Font-based Phosphor icon renderer for **React web** and **React Native**, using a unified API:
 
