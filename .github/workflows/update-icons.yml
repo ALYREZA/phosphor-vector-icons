@@ -44,6 +44,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          pnpm build
           pnpm --filter phosphor-vector-icons exec npm version patch --no-git-tag-version
           git add -A
           git commit -m "chore: update phosphor icons"
