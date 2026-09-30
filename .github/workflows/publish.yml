@@ -32,4 +32,10 @@ jobs:
       - name: Publish phosphor-vector-icons
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: pnpm --filter phosphor-vector-icons publish --no-git-checks
+        run: |
+          version=$(node -p "require('./packages/phosphor-icons/package.json').version")
+          if npm view "phosphor-vector-icons@${version}" version >/dev/null 2>&1; then
+            echo "phosphor-vector-icons@${version} is already on npm. Skipping publish."
+            exit 0
+          fi
+          pnpm --filter phosphor-vector-icons publish --no-git-checks
