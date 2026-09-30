@@ -1,6 +1,6 @@
 {
   "name": "phosphor-vector-icons",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Font-based Phosphor icon renderer for React web + React Native.",
   "license": "MIT",
   "author": "ALYREZA",
