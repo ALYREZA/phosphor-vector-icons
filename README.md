@@ -42,7 +42,7 @@ Supported weights:
 - `fill`
 - `duotone`
 
-By default every weight is available. Call `configure` once at app startup if you only need some of them (for example Regular). Unconfigured `weight` values fall back to Regular when it is enabled, otherwise to the first configured weight.
+By default every weight is available. Call `configure` once at app startup to choose which weights the component resolves. A `weight` outside that list falls back to Regular when Regular is included, otherwise to the first configured weight. Import a weight entry to include only that TTF in the compiled bundle.
 
 ```tsx
 import { Icon, configure } from "phosphor-vector-icons";
@@ -58,7 +58,7 @@ export function Example() {
 configure({ weights: ["regular", "fill"] });
 ```
 
-On the web this only injects `@font-face` rules for the configured TTFs. In Expo, only `require()` those same files:
+On the web, `configure` injects `@font-face` rules for the resolved weight. The root import still references every TTF. In Expo, `require` only the files you register:
 
 ```tsx
 import { configure, FONT_FAMILY } from "phosphor-vector-icons";

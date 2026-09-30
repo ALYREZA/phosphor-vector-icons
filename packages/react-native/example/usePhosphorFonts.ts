@@ -3,7 +3,7 @@ import * as Font from "expo-font";
 export function usePhosphorFonts() {
   // `Icon` uses FONT_FAMILY names like "Phosphor-Regular".
   // These must be registered for React Native so the glyphs appear.
-  // To ship a single weight, call configure({ weights: ["regular"] })
+  // To ship a single weight, import from "phosphor-vector-icons/regular"
   // and require only Phosphor-Regular.ttf.
   return Font.useFonts({
     "Phosphor-Thin": require("phosphor-vector-icons/fonts/Phosphor-Thin.ttf"),

@@ -2,8 +2,9 @@ import { WEIGHTS, type Weight } from "./fonts";
 
 export type PhosphorIconsConfig = {
   /**
-   * Font families to load. Defaults to all weights.
-   * Example: `{ weights: ["regular"] }` ships/uses only Regular.ttf.
+   * Weights the component may use at runtime. Defaults to all weights.
+   * `{ weights: ["regular"] }` resolves every `weight` prop to Regular.
+   * Import `phosphor-vector-icons/regular` to include only Regular.ttf in the bundle.
    */
   weights?: readonly Weight[];
 };
