@@ -8,6 +8,9 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v4
 
@@ -33,9 +36,38 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
+          set -euo pipefail
           version=$(node -p "require('./packages/phosphor-icons/package.json').version")
-          if npm view "phosphor-vector-icons@${version}" version >/dev/null 2>&1; then
-            echo "phosphor-vector-icons@${version} is already on npm. Skipping publish."
+          pkg="phosphor-vector-icons@${version}"
+
+          if npm view "$pkg" version >/dev/null 2>&1; then
+            echo "$pkg is already on npm. Skipping publish."
             exit 0
           fi
-          pnpm --filter phosphor-vector-icons publish --no-git-checks
+
+          set +e
+          publish_out=$(pnpm --filter phosphor-vector-icons publish --no-git-checks 2>&1)
+          publish_code=$?
+          set -e
+          printf '%s\n' "$publish_out"
+
+          if [ "$publish_code" -eq 0 ]; then
+            :
+          elif printf '%s' "$publish_out" | grep -q 'Cannot publish over previously staged version'; then
+            echo "$pkg was already staged (likely by another workflow). Waiting for it to become visible..."
+          else
+            exit "$publish_code"
+          fi
+
+          # npm can take a few minutes to promote a staged version to public.
+          for i in $(seq 1 20); do
+            if npm view "$pkg" version >/dev/null 2>&1; then
+              echo "$pkg is live on npm."
+              exit 0
+            fi
+            echo "not visible yet ($i/20); sleeping 30s..."
+            sleep 30
+          done
+
+          echo "Timed out waiting for $pkg to become visible on npm."
+          exit 1
