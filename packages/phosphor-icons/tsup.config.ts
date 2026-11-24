@@ -22,6 +22,7 @@ export default defineConfig({
   },
   outDir: ".",
   // outDir is the package root; do not wipe sources/fonts.
+  // Previous JS/DTS outputs are removed in copy-core-artifacts.mjs (prebuild).
   clean: false,
   splitting: false,
   external: ["react", "react-native"],

@@ -1,6 +1,5 @@
 import * as react from 'react';
-import { I as IconProps$1 } from './createIcon.d-DEmOvfzm.d-CAQMXFS2.d-BXEfYnhH.d-BNMTtsUI.d-CX4zGDzZ.d-2BDzcVeO.d-D6ccRBHJ.d-Bg9JY-ZG.d-2B9oARLM.d-DGcM1b9h.d-B__nowY-.d-B-WU726L.d-DHjHZ7gc.d-DnMa4fHf.d-P9AMKW6Z.d-CnFyfocV.d-yxL3UMkH.d-jh3K6F4x.d-BdkdRwBW.js';
-import './fonts.d-rAGdQ7Gi.d-rAGdQ7Gi.d-rAGdQ7Gi.d-rAGdQ7Gi.d-rAGdQ7Gi.d-rAGdQ7Gi.d-rAGdQ7Gi.d-rAGdQ7Gi.d-rAGdQ7Gi.d-rAGdQ7Gi.d-rAGdQ7Gi.d-rAGdQ7Gi.d-rAGdQ7Gi.d-rAGdQ7Gi.d-rAGdQ7Gi.d-rAGdQ7Gi.d-rAGdQ7Gi.d-rAGdQ7Gi.d-rAGdQ7Gi.js';
+import { IconProps as IconProps$1 } from 'phosphor-icons-react-native/createIcon';
 
 type Weight = "fill";
 type IconProps = IconProps$1<Weight>;

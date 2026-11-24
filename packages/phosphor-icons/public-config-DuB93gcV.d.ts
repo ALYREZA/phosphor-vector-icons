@@ -10,4 +10,26 @@ declare const FONT_FAMILY: {
 };
 type Weight = keyof typeof FONT_FAMILY;
 
-export type { IconName as I, Weight as W };
+declare const FONT_FILE: {
+    readonly thin: "Phosphor-Thin.ttf";
+    readonly light: "Phosphor-Light.ttf";
+    readonly regular: "Phosphor-Regular.ttf";
+    readonly bold: "Phosphor-Bold.ttf";
+    readonly fill: "Phosphor-Fill.ttf";
+    readonly duotone: "Phosphor-Duotone.ttf";
+};
+
+type PhosphorIconsConfig$1 = {
+    /**
+     * Weights the component may use at runtime. Defaults to all weights.
+     * `{ weights: ["regular"] }` resolves every `weight` prop to Regular.
+     * Import `phosphor-vector-icons/regular` to include only Regular.ttf in the bundle.
+     */
+    weights?: readonly Weight[];
+};
+
+type PhosphorIconsConfig = PhosphorIconsConfig$1;
+
+declare function configure(config: PhosphorIconsConfig): void;
+
+export { FONT_FAMILY as F, type IconName as I, type PhosphorIconsConfig as P, type Weight as W, FONT_FILE as a, configure as c };
